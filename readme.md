@@ -2,6 +2,9 @@
 
 A simple and smart Flask-based API that serves a pre-trained logistic regression model for making predictions. The API encodes categorical data before feeding it into the model and returns the result in JSON format.
 
+
+<img src="/image/image.png">
+
 ## Features
 
 - **JSON Input**: Accepts input via POST requests.
