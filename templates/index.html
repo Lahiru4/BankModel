@@ -1,621 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="forest">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction Form</title>
-    <!-- SweetAlert2 for better alerts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.4.8/sweetalert2.all.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a86ff;
-            --accent-color: #4cc9f0;
-            --dark-color: #2b2d42;
-            --light-color: #f8f9fa;
-            --success-color: #06d6a0;
-            --error-color: #ef476f;
-            --text-color: #333;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background-image: url('https://leonardo.ai/wp-content/uploads/2024/07/ai-graphic-design-vector-art-1280x960.webp');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-color);
-        }
-
-        .container {
-            width: 90%;
-            max-width: 550px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px var(--shadow-color),
-                        0 0 20px rgba(74, 153, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            position: relative;
-        }
-
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: block;
-            margin-bottom: 8px;
-            color: var(--dark-color);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        select, input[type="number"] {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background: #fff;
-            color: var(--text-color);
-            transition: all 0.3s;
-            box-sizing: border-box;
-            box-shadow: 0 2px 5px var(--shadow-color);
-        }
-
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234361ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-
-        select:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
-        }
-
-        select:hover, input[type="number"]:hover {
-            border-color: var(--secondary-color);
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(74, 153, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 1px;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(74, 153, 255, 0.4);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        .result, .error {
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.1rem;
-            animation: fadeIn 0.5s;
-        }
-
-        .result {
-            background-color: rgba(6, 214, 160, 0.1);
-            color: var(--success-color);
-            border: 1px solid rgba(6, 214, 160, 0.3);
-            display: none;
-        }
-
-        .error {
-            background-color: rgba(239, 71, 111, 0.1);
-            color: var(--error-color);
-            border: 1px solid rgba(239, 71, 111, 0.3);
-            display: none;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-            text-align: center;
-            position: relative;
-            border: 1px solid rgba(67, 97, 238, 0.1);
-        }
-
-        .modal.show .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
-            position: relative;
-        }
-
-        .modal-title {
-            margin: 0;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: var(--text-color);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #999;
-            cursor: pointer;
-            transition: color 0.2s;
-            padding: 5px;
-            line-height: 1;
-            width: auto;
-            box-shadow: none;
-        }
-
-        .close-modal:hover {
-            color: var(--error-color);
-            transform: none;
-        }
-
-        .prediction-value {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--success-color);
-            margin: 15px 0;
-            padding: 10px;
-            background-color: rgba(6, 214, 160, 0.1);
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .prediction-error {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--error-color);
-            margin: 15px 0;
-            padding: 10px;
-            background-color: rgba(239, 71, 111, 0.1);
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .modal-footer {
-            padding-top: 15px;
-        }
-
-        .modal-btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .modal-btn-primary {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            box-shadow: 0 4px 10px rgba(74, 153, 255, 0.3);
-        }
-
-        .modal-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(74, 153, 255, 0.4);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(74, 153, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(74, 153, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 153, 255, 0); }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 95%;
-                padding: 20px;
-                margin: 20px;
-            }
-
-            h1 {
-                font-size: 1.6rem;
-            }
-
-            label {
-                font-size: 0.85rem;
-            }
-
-            select, input[type="number"] {
-                padding: 10px;
-            }
-
-            button {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .modal-content {
-                width: 90%;
-                padding: 20px;
-            }
-
-            .modal-title {
-                font-size: 1.3rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 1.4rem;
-            }
-
-            .form-group {
-                margin-bottom: 15px;
-            }
-
-            button {
-                padding: 10px;
-            }
-
-            .modal-content {
-                padding: 15px;
-            }
-
-            .modal-title {
-                font-size: 1.2rem;
-            }
-
-            .prediction-value, .prediction-error {
-                font-size: 1.1rem;
-            }
-        }
-    </style>
+    <title>Bank Term Deposit Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
 
-<div class="container">
-    <h1>AI Prediction System</h1>
-    <form id="predictForm">
-        <div class="form-group">
-            <label for="age">Age</label>
-            <input type="number" id="age" name="age" placeholder="Enter your age (max 80)" required>
-        </div>
+<body class="flex justify-center items-center h-screen">
 
-        <div class="form-group">
-            <label for="job">Occupation</label>
-            <select id="job" name="job" required>
-                <option value="" disabled selected>Select your occupation</option>
-                <option value="admin.">Administrative</option>
-                <option value="blue-collar">Blue-collar</option>
-                <option value="entrepreneur">Entrepreneur</option>
-                <option value="housemaid">Housemaid</option>
-                <option value="management">Management</option>
-                <option value="retired">Retired</option>
-                <option value="self-employed">Self-employed</option>
-                <option value="services">Services</option>
-                <option value="student">Student</option>
-                <option value="technician">Technician</option>
-                <option value="unemployed">Unemployed</option>
-                <option value="unknown">Unknown</option>
-            </select>
-        </div>
+    <div class="p-8 rounded-lg shadow-lg w-full max-w-3xl">
+        <h2 class="text-2xl font-bold text-center text-primary mb-6">Bank Term Deposit Prediction</h2>
 
-        <div class="form-group">
-            <label for="marital">Marital Status</label>
-            <select id="marital" name="marital" required>
-                <option value="" disabled selected>Select your marital status</option>
-                <option value="divorced">Divorced</option>
-                <option value="married">Married</option>
-                <option value="single">Single</option>
-            </select>
-        </div>
+        <form id="predictForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="age" class="label">Age:</label>
+                <input type="number" id="age" name="age" required min="0" max="120" placeholder="Enter your age"
+                    class="input input-primary input-bordered w-full">
+            </div>
 
-        <div class="form-group">
-            <label for="education">Education Level</label>
-            <select id="education" name="education" required>
-                <option value="" disabled selected>Select your education</option>
-                <option value="primary">Primary</option>
-                <option value="secondary">Secondary</option>
-                <option value="tertiary">Tertiary</option>
-                <option value="unknown">Unknown</option>
-            </select>
-        </div>
+            <div>
+                <label for="job" class="label">Job:</label>
+                <select id="job" name="job" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Job</option>
+                    <option value="0">Management</option>
+                    <option value="1">Technician</option>
+                    <option value="2">Entrepreneur</option>
+                    <option value="3">Blue-collar</option>
+                    <option value="5">Retired</option>
+                    <option value="6">Admin</option>
+                    <option value="7">Services</option>
+                    <option value="8">Self-employed</option>
+                    <option value="9">Unemployed</option>
+                    <option value="10">Housemaid</option>
+                    <option value="11">Student</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="default">Default Payment</label>
-            <select id="default" name="default" required>
-                <option value="" disabled selected>Have you defaulted on payments?</option>
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
+            <div>
+                <label for="marital" class="label">Marital Status:</label>
+                <select id="marital" name="marital" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Marital Status</option>
+                    <option value="0">Married</option>
+                    <option value="1">Single</option>
+                    <option value="2">Divorced</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="housing">Housing Loan</label>
-            <select id="housing" name="housing" required>
-                <option value="" disabled selected>Do you have a housing loan?</option>
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
+            <div>
+                <label for="education" class="label">Education:</label>
+                <select id="education" name="education" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Education</option>
+                    <option value="0">Tertiary</option>
+                    <option value="1">Secondary</option>
+                    <option value="3">Primary</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="loan">Personal Loan</label>
-            <select id="loan" name="loan" required>
-                <option value="" disabled selected>Do you have a personal loan?</option>
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
+            <div>
+                <label for="default" class="label">Credit in Default:</label>
+                <select id="default" name="default" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Default Status</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
 
-        <button type="submit">Generate Prediction</button>
-    </form>
+            <div>
+                <label for="housing" class="label">Housing Loan:</label>
+                <select id="housing" name="housing" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Housing Loan</option>
+                    <option value="0">Yes</option>
+                    <option value="1">No</option>
+                </select>
+            </div>
 
-    <div id="predictionResult" class="result"></div>
-    <div id="errorMessage" class="error"></div>
-</div>
+            <div>
+                <label for="loan" class="label">Personal Loan:</label>
+                <select id="loan" name="loan" required class="select select-primary select-bordered w-full">
+                    <option value="" disabled selected>Select Personal Loan</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
 
-<!-- Modal -->
-<div id="resultModal" class="modal">
-    <div class="modal-content">
-        <button id="closeModal" class="close-modal">&times;</button>
-        <div class="modal-header">
-            <h2 class="modal-title">Prediction Result</h2>
-        </div>
-        <div class="modal-body">
-            <p>Based on your information, our AI prediction system has determined:</p>
-            <div id="modalPredictionResult" class="prediction-value"></div>
-            <div id="modalErrorMessage" class="prediction-error" style="display:none;"></div>
-        </div>
-        <div class="modal-footer">
-            <button id="okButton" class="modal-btn modal-btn-primary">OK</button>
-        </div>
+            <div class="md:col-span-2 flex justify-center">
+                <button type="button" onclick="predict()" class="btn btn-primary w-full">Submit</button>
+            </div>
+        </form>
     </div>
-</div>
 
-<script>
-    // Modal elements
-    const modal = document.getElementById('resultModal');
-    const closeModal = document.getElementById('closeModal');
-    const okButton = document.getElementById('okButton');
-    const modalPredictionResult = document.getElementById('modalPredictionResult');
-    const modalErrorMessage = document.getElementById('modalErrorMessage');
-
-    // Close modal function
-    function closeModalFunction() {
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
-    }
-
-    // Event listeners for closing the modal
-    closeModal.addEventListener('click', closeModalFunction);
-    okButton.addEventListener('click', closeModalFunction);
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closeModalFunction();
-        }
-    });
-
-    document.getElementById('predictForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // Get form values
-        const age = document.getElementById('age').value;
-        const job = document.getElementById('job').value;
-        const marital = document.getElementById('marital').value;
-        const education = document.getElementById('education').value;
-        const defaultPayment = document.getElementById('default').value;
-        const housing = document.getElementById('housing').value;
-        const loan = document.getElementById('loan').value;
-
-        // Validate age
-        if (age > 80) {
-            Swal.fire({
-                title: 'Invalid Age',
-                text: 'Age must be 80 or below',
-                icon: 'error',
-                confirmButtonColor: '#4361ee',
-                background: '#ffffff',
-                color: '#333'
-            });
-            return;
-        }
-
-        // Validate all fields are selected
-        if (!age || !job || !marital || !education || !defaultPayment || !housing || !loan) {
-            Swal.fire({
-                title: 'Incomplete Form',
-                text: 'Please fill out all fields',
-                icon: 'warning',
-                confirmButtonColor: '#4361ee',
-                background: '#ffffff',
-                color: '#333'
-            });
-            return;
-        }
-
-        const formData = {
-            age: age,
-            job: job,
-            marital: marital,
-            education: education,
-            default: defaultPayment,
-            housing: housing,
-            loan: loan
-        };
-
-        fetch('http://127.0.0.1:5000/predict', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Update the original result/error displays (hidden but keeping for compatibility)
-            if (data.prediction) {
-                document.getElementById('predictionResult').innerHTML = 'Prediction: ' + data.prediction;
-                document.getElementById('predictionResult').style.display = 'block';
-                document.getElementById('errorMessage').style.display = 'none';
-
-                // Update and show modal with prediction
-                modalPredictionResult.innerHTML = data.prediction;
-                modalPredictionResult.style.display = 'block';
-                modalErrorMessage.style.display = 'none';
-            } else if (data.error) {
-                document.getElementById('errorMessage').innerHTML = 'Error: ' + data.error;
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('predictionResult').style.display = 'none';
-
-                // Update and show modal with error
-                modalErrorMessage.innerHTML = 'Error: ' + data.error;
-                modalErrorMessage.style.display = 'block';
-                modalPredictionResult.style.display = 'none';
-            }
-
-            // Show the modal
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        })
-        .catch(error => {
-            document.getElementById('errorMessage').innerHTML = 'Error: Unable to make prediction.';
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('predictionResult').style.display = 'none';
-
-            // Update and show modal with error
-            modalErrorMessage.innerHTML = 'Error: Unable to make prediction.';
-            modalErrorMessage.style.display = 'block';
-            modalPredictionResult.style.display = 'none';
-
-            // Show the modal
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        });
-    });
-</script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>
